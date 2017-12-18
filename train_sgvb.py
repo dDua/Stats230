@@ -57,7 +57,7 @@ def evaluate_autoencoder(epoch, hidden_size):
         if i == 0:
             n = min(data.size(0), 8)
             samples = torch.cat([data[:n], reconst.view(-1, 1, args.input_size, args.input_size)[:n]])
-            save_image(samples.data.cpu(), 'results_'+str(hidden_size)+'_vae/reconstruction_'+str(epoch)+'.png', nrow=n)
+            save_image(samples.data.cpu(), 'results/reconstruction_'+str(epoch)+'.png', nrow=n)
     
     test_loss /= len(test_loader.dataset)
     print('====> Test set loss {0} <====='.format(test_loss))
@@ -115,6 +115,6 @@ for epoch in range(1, args.epochs + 1):
             sample = sample.cuda()
         sample = autoencoder.decoder(sample).cpu()
         save_image(sample.data.view(-1, 1, args.input_size, args.input_size), \
-                   'results_'+str(args.hidden_size)+'_vae/sample_'+str(epoch)+'.png')
+                   'results/sample_'+str(epoch)+'.png')
         
 

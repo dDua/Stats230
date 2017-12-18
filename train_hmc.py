@@ -66,7 +66,7 @@ def evaluate_autoencoder(epoch):
         if i == 0:
             n = min(data.size(0), 8)
             samples = torch.cat([data[:n], reconst.view(-1, 1, args.input_size, args.input_size)[:n]])
-            save_image(samples.data.cpu(), '/home/ddua/workspace/VAE/results_64_hmc/reconstruction_'+str(epoch)+'.png', nrow=n)
+            save_image(samples.data.cpu(), 'results/reconstruction_'+str(epoch)+'.png', nrow=n)
     
     test_loss /= len(test_loader.dataset)
     print('====> Test set loss {0} <====='.format(test_loss))
@@ -112,17 +112,8 @@ for epoch in range(1, args.epochs + 1):
             init_x = encoded_rep.data.cpu().numpy()
 
         hmc.get_hmc_sample(init_x, data, gpu=args.cuda)
-        #loss = get_loss(recon_batch, data, mu, logvar)
-        #loss.backward()
-        #train_loss += loss.data[0]
         optimizer.step()
-        if batch_idx % args.log_interval == 0:
-             print(batch_idx)
-#             print('Train epoch : {} [{}/{} ({:.0f}%)]\tLoss {:.6f}'.format(epoch, 
-#                         batch_idx * len(data), len(train_loader.dataset),
-#                         (100 * batch_idx)/len(train_loader), loss.data[0]/len(data)))
-
-    #print('=====> Epoch: {0} Average loss: {1} <===='.format(epoch, train_loss/len(train_loader.dataset)))
+        
     if epoch % args.evaluate_interval == 0:
         print("evaluating model")
         evaluate_autoencoder(epoch)
@@ -131,6 +122,6 @@ for epoch in range(1, args.epochs + 1):
             sample = sample.cuda()
         sample = autoencoder.decoder(sample).cpu()
         save_image(sample.data.view(-1, 1, args.input_size, args.input_size), \
-                   'results_64_hmc/sample_'+str(epoch)+'.png')
+                   'results/sample_'+str(epoch)+'.png')
         
 
